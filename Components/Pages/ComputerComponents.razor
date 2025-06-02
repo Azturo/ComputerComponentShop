@@ -1,0 +1,130 @@
+﻿@using ComputerComponentShop.Models.ProductClasses
+@using ComputerComponentShop.Models.Services
+@using ComputerComponentShop.Models.ProductEnums
+@using ComputerComponentShop.Models.BaseClasses
+@inject ComponentManager ComponentManager
+@page "/components"
+
+<PageTitle>Computer Components</PageTitle>
+
+
+@if (sProducts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col 12 text-center">
+                <h1>Available Computer Components</h1>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-2 mb-3 mb-sm-4 offset-sm-1">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">MotherBoards</h5>
+                    <p class="card-text">Click below to see our available Motherboards!</p>
+                    <a class="btn btn-primary" href="/motherboards">Explore</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2 mb-3 mb-sm-4 ">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Graphic Cards</h5>
+                    <p class="card-text">Click below to see our available Graphic Cards!</p>
+                    <a class="btn btn-primary" href="/graphiccards">Explore</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2 mb-3 mb-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Power Supplies</h5>
+                    <p class="card-text">Click below to see our available Power Supplies!</p>
+                    <a class="btn btn-primary" href="/powersupplies">Explore</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2 mb-3 mb-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">RAM</h5>
+                    <p class="card-text">Click below to see our available RAMs!</p>
+                    <a class="btn btn-primary" href="/rams">Explore</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2 mb-3 mb-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Chassis</h5>
+                    <p class="card-text">Click below to see our available Chassis!</p>
+                    <a class="btn btn-primary" href="/chassis">Explore</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2 mb-3 mb-sm-4 offset-sm-1">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Processors</h5>
+                    <p class="card-text">Click below to see our available Processors!</p>
+                    <a class="btn btn-primary" href="/processors">Explore</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2 mb-3 mb-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Solid State Drives</h5>
+                    <p class="card-text">Click below to see our available SSDs!</p>
+                    <a class="btn btn-primary" href="/solidstatedrives">Explore</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2 mb-3 mb-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">HDD Drives</h5>
+                    <p class="card-text">Click below to see our available HDDs!</p>
+                    <a class="btn btn-primary" href="/hdds">Explore</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2 mb-3 mb-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Water Coolers</h5>
+                    <p class="card-text">Click below to see our available Water Coolers!</p>
+                    <a class="btn btn-primary" href="/watercoolers">Explore</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2 mb-3 mb-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Air Coolers</h5>
+                    <p class="card-text">Click below to see our available Air Coolers!</p>
+                    <a class="btn btn-primary" href="/aircoolers">Explore</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@code {
+    private List<Product> sProducts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        sProducts = ComponentManager.GetAllProductsFlat();
+    }
+
+
+}

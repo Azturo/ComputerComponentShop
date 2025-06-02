@@ -1,0 +1,109 @@
+﻿@page "/reciept"
+@inject CustomerManager CustomerManager
+@inject NavigationManager NavManager
+
+<PageTitle>Order Confirmation</PageTitle>
+
+@if (sLatestCustomer != null)
+{
+	<div class="container text-center">
+		<h2 class="fw-bold">Order Confirmation</h2>
+		<p class="lead">Thank you for your purchase at <strong>Computer Component Shop</strong></p>
+	</div>
+
+
+	<div class="container d-flex justify-content-center">
+		<div class="container d-flex justify-content-center">
+			<div class="card mb-3 p-3 shadow" style="width:800px">
+
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<h5 class="mb-0 fw-bold">Customer Information</h5>
+					<button class="btn-success rounded-1" @onclick="NavToHome">Continue Shopping</button>
+				</div>
+
+
+
+				<p class="mb-0"><strong>Name:</strong> @sLatestCustomer.FirstName @sLatestCustomer.LastName</p>
+				<p class="mb-0"><strong>Email:</strong> @sLatestCustomer.Email</p>
+				<p class="mb-0"><strong>Phone:</strong> @sLatestCustomer.Phone</p>
+
+				<div>
+					<h5 class="mt-4 mb-3 fw-bold">Shipping Address</h5>
+					<p class="mb-0">@sLatestCustomer.Address.Street</p>
+					<p class="mb-0">@sLatestCustomer.Address.ZipCode @sLatestCustomer.Address.City</p>
+					<p class="mb-3">@sLatestCustomer.Address.Country</p>
+				</div>
+
+				<div>
+					<h4>Order Summary</h4>
+					<table class="table table-bordered table-sm">
+						<thead>
+							<tr>
+								<th>Product</th>
+								<th>Quantity</th>
+								<th>Price</th>
+								<th>Total Price</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var sProductsInOrder in sLatestCustomer.Order.Products)
+							{
+								<tr>
+									<td>@sProductsInOrder.Product.Name</td>
+									<td>@sProductsInOrder.Quantity</td>
+									<td>@sProductsInOrder.Product.Price.ToString("C")</td>
+									<td>@((sProductsInOrder.Product.Price * sProductsInOrder.Quantity).ToString("C"))</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+
+				</div>
+
+				<div class="d-flex justify-content-between align-items-center mb-0">
+					<div class="text-md-start mt-3">
+						<h5 class="text-muted"><strong>Computer Component Shop</strong></h5>
+						<p class="text-muted">Email: <strong>customersupport@componentshop.com</strong></p>
+						<p class="text-muted">Phone: <strong>+46 145 567 335</strong></p>
+					</div>
+
+
+
+					<div class="text-end mt-3">
+						<h5>Total: <span class="text-success">@sLatestCustomer.Order.TotalSum.ToString("C")</span></h5>
+						<p class="text-muted">Order Number: <strong>@sLatestCustomer.Order.OrderNumber</strong></p>
+						<p class="text-muted">Order Date: <strong>@sLatestCustomer.Order.OrderDate.ToString("yyyy-MM-dd HH:mm")</strong></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+}
+
+
+
+
+
+
+@code {
+	private Customer? sLatestCustomer;
+	private ShoppingCartManager? sShoppingCart;
+
+	protected override void OnInitialized()
+	{
+		var sAllCustomers = CustomerManager.GetAll().ToList();
+		if (sAllCustomers.Any())
+		{
+			sLatestCustomer = sAllCustomers.Last();
+		}
+	}
+
+	private void NavToHome()
+	{
+		NavManager.NavigateTo("");
+	}
+
+}

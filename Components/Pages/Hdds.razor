@@ -1,0 +1,85 @@
+﻿@inject ComponentManager ComponentManager
+@inject ShoppingCartManager ShoppingCartManager
+@page "/hdds"
+<PageTitle>HDD</PageTitle>
+
+<div class="container">
+    <div class="row">
+        @foreach (var product in ComponentManager.GetComponentsBasedOnCategories(ProductCategory.HDD))
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@product.Manufacturer</h6>
+                        <p class="card-text">@product.Description</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Price:</strong> @product.Price.ToString("C0")</li>
+                    </ul>
+                    <div class="card-footer text-end">
+                        <button class="btn btn-success btn-sm" @onclick="() => ShoppingCartManager.AddProductsToCart(product, 1)">Add to cart</button>
+                        <button @onclick="() => DisplayMoreInfo(product)" class="btn btn-primary btn-sm">More info</button>
+                    </div>
+                    <div class="card-footer text-md-start">
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@if (IsFormVisible && sSelectedProduct is Hdd aHddDrive)
+{
+    <div class="modal fade show d-block" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content shadow-lg border-0 rounded-4">
+                <div class="modal-header bg-primary text-white rounded-top-4 bg-dark">
+                    <h5 class="modal-title fw-bold bg-dark">@aHddDrive.Name </h5>
+                    <button type="button" class="btn-close btn-close-white" @onclick="HideInfo"></button>
+                </div>
+                <div class="modal-body">
+                    <table table table-bordered table-striped>
+                        <tbody>
+                            @foreach (var _property in aHddDrive.GetType().GetProperties())
+                            {
+                                var aValue = _property.GetValue(aHddDrive);
+                                string aPropertyName = _property.Name;
+                                string aPropertySuffix = ComponentManager.ShowCorrectSuffixOnProperty(aPropertyName);
+                                <tr>
+                                    <th class=" p-1">@ComponentManager.PrettyPrintComponentProperties(_property.Name):</th>
+                                    <td class="vw-50 p-1">@($"{aValue}{aPropertySuffix}")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="modal-footer bg-dark rounded-bottom-4">
+                    <button class="btn btn-secondary" @onclick="HideInfo">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    bool IsFormVisible = false;
+    private Product? sSelectedProduct;
+    private string DisplayValue = string.Empty;
+
+    private void DisplayMoreInfo(Product aProduct)
+    {
+        IsFormVisible = true;
+        sSelectedProduct = aProduct;
+    }
+
+    private void HideInfo()
+    {
+        IsFormVisible = false;
+        sSelectedProduct = null;
+    }
+
+    
+
+}

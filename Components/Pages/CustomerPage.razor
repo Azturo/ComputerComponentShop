@@ -1,0 +1,173 @@
+﻿@page "/customerinfo"
+@inject CustomerManager CustomerManager
+@inject ShoppingCartManager ShoppingCartManager
+@inject NavigationManager NavManager
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="card shadow p-3" style="width: 100%; max-width: 600px;">
+                <h4 class="mb-4 fw-bold">Customer Information</h4>
+                <EditForm Model="@Customer" OnValidSubmit="FinalizePurchase">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <table class="table table-borderless align-middle">
+                        <tbody>
+                            <tr>
+                                <th class="text-end align-middle" style="width:150px">First Name:</th>
+                                <td>
+                                    <InputText class="form-control" @bind-Value="Customer.FirstName" />
+                                    <ValidationMessage For="@(() => Customer.FirstName)" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="text-end align-middle" style="width:150px">Last Name:</th>
+                                <td>
+                                    <InputText class="form-control" @bind-Value="Customer.LastName" />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th class="text-end align-middle" style="width:150px">Email:</th>
+                                <td>
+                                    <InputText class="form-control" @bind-Value="Customer.Email" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="text-end align-middle" style="width:150px">Phone number:</th>
+                                <td>
+                                    <InputText class="form-control" @bind-Value="Customer.Phone" />
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                    <h5 class="mb-4 fw-bold d-flex ">Address Information</h5>
+
+                    <table class="table table-borderless align-middle">
+                        <tbody>
+                            <tr>
+                                <th class="text-end align-middle" style="width:150px">Street:</th>
+                                <td>
+                                    <InputText class="form-control" @bind-Value="Customer.Address.Street" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="text-end align-middle" style="width:150px">City:</th>
+                                <td>
+                                    <InputText class="form-control" @bind-Value="Customer.Address.City" />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th class="text-end align-middle" style="width:150px">Zipcode:</th>
+                                <td>
+                                    <InputText class="form-control" @bind-Value="Customer.Address.ZipCode" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="text-end align-middle" style="width:150px">Country:</th>
+                                <td>
+                                    <InputText class="form-control" @bind-Value="Customer.Address.Country" />
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                    @if (ShoppingCartManager.GetShoppingCart().Count > 0)
+                    {
+                        <button class="btn btn-success">Finalize Purchase</button>
+                    }
+
+                </EditForm>
+
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card shadow p-3" style="width: 100%; max-width: fit-content;">
+                <h4 class="mb-4 fw-bold">Shopping Cart:</h4>
+
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th width="100%">Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var aProduct in ShoppingCartManager.GetShoppingCart())
+                        {
+                            <tr>
+                                <td class="text-sm-start">@aProduct.Product.Name</td>
+                                <td class="text-sm-center">
+                                    <div class="d-flex justify-content-center align-items-center gap-2">
+                                        <strong class="text-danger h3" style="cursor: pointer;"
+                                                @onclick="() => ShoppingCartManager.DecreaseQtyInCart(aProduct)">
+                                            -
+                                        </strong>
+
+                                        <span class="justify-content-center">@aProduct.Quantity</span>
+
+                                        <p class="text-danger h5" style="cursor: pointer;"
+                                           @onclick="() => ShoppingCartManager.IncreaseQtyInCart(aProduct)">
+                                            +
+                                        </p>
+
+                                    </div>
+                                </td>
+
+
+                                <td class="text-sm-center">@((aProduct.Product.Price * aProduct.Quantity).ToString("C"))</td>
+                                <td class="text-black-sm-end text-sm-center">
+                                    <i class="bi bi-trash text-danger justify-content-center" style="cursor: pointer;" @onclick="() => ShoppingCartManager.RemoveProductFromCart(aProduct)"></i>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+
+
+                </table>
+
+                <div>
+                    <table class="table">
+                        <tbody>
+
+                            <tr>
+                                <td class="text-sm-start">Subtotal:</td>
+                                <td class="text-sm-end">@ShoppingCartManager.GetCartSum().ToString("C")</td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+@code {
+    private Customer Customer = new();
+
+    private void FinalizePurchase()
+    {
+        // var sProductsInCart = ShoppingCartManager.GetShoppingCart();
+
+        CustomerManager.AddCustomer(Customer);
+
+        ShoppingCartManager.CompletePurchase(Customer);
+
+        NavManager.NavigateTo("reciept");
+    }
+}

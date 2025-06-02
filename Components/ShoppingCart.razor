@@ -1,0 +1,101 @@
+﻿@inject ShoppingCartManager ShoppingCartManager
+@inject NavigationManager NavigationManager
+
+<!-- OffCanvas for shopping cart-->
+<div class="offcanvas offcanvas-end" id="cartOffCanvas" aria-labelledby="offcanvasLabel">
+    <div class="offcanvas-header">
+        <h5 id="offcanvasLabel">Shopping Cart</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+
+    </div>
+    <div class="offcanvas-body">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th width="100%">Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var aProduct in ShoppingCartManager.GetShoppingCart())
+                {
+                    <tr>
+                        <td class="text-sm-start">@aProduct.Product.Name</td>
+                        <td class="text-sm-center">
+                            <div class="d-flex justify-content-center align-items-center gap-2">
+                                <strong class="text-danger h3" style="cursor: pointer;"
+                                @onclick="() => ShoppingCartManager.DecreaseQtyInCart(aProduct)">
+                                -
+                                </strong>
+
+                                <span class="justify-content-center">@aProduct.Quantity</span>
+
+                                <p class="text-danger h5" style="cursor: pointer;"
+                                @onclick="() => ShoppingCartManager.IncreaseQtyInCart(aProduct)">
+                                +
+                                </p>
+
+                            </div>
+                        </td>
+
+
+                        <td class="text-sm-center">@((aProduct.Product.Price* aProduct.Quantity).ToString("C"))</td>
+                        <td class="text-black-sm-end text-sm-center">
+                            <i class="bi bi-trash text-danger justify-content-center" style="cursor: pointer;" @onclick="() => ShoppingCartManager.RemoveProductFromCart(aProduct)"></i>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+
+
+        </table>
+
+        <div>
+            <table class="table">
+                <tbody>
+
+                    <tr>
+                        <td class="text-sm-start">Subtotal:</td>
+                        <td class="text-sm-end">@ShoppingCartManager.GetCartSum().ToString("C")</td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+
+
+        </div>
+
+        <div class="container">
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-primary" data-bs-dismiss="offcanvas" @onclick="FinalizePurchase">Checkout</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        ShoppingCartManager.OnChange += StateHasChanged;
+    }
+
+    private void Dispose()
+    {
+        ShoppingCartManager.OnChange -= StateHasChanged;
+    }
+
+
+    private void FinalizePurchase()
+    {
+        Task.Delay(1500);
+        NavigationManager.NavigateTo("customerinfo");
+    }
+
+
+ 
+}
