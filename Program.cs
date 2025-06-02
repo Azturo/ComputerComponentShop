@@ -1,6 +1,8 @@
 using Blazored.LocalStorage;
 using ComputerComponentShop.Components;
+using ComputerComponentShop.Models.DataBase;
 using ComputerComponentShop.Models.Services;
+using Microsoft.EntityFrameworkCore;
 
 
 
@@ -10,11 +12,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddDbContext<ComputerComponentContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ComponentShop")));
+
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<CustomerManager>();
 builder.Services.AddSingleton<AlertService>();
 builder.Services.AddScoped<ShoppingCartManager>();
 builder.Services.AddSingleton<ComponentManager>();
+builder.Services.AddScoped<ComputerComponentRepository>();
 
 var app = builder.Build();
 
