@@ -9,7 +9,7 @@
             <div class="card shadow p-3" style="width: 100%; max-width: 600px;">
                 <h4 class="mb-4 fw-bold">Customer Information</h4>
                 <EditForm Model="@Customer" OnValidSubmit="FinalizePurchase">
-                    <DataAnnotationsValidator />
+                    <ObjectGraphDataAnnotationsValidator />
                     <ValidationSummary />
 
                     <table class="table table-borderless align-middle">
@@ -31,7 +31,7 @@
                             <tr>
                                 <th class="text-end align-middle" style="width:150px">Email:</th>
                                 <td>
-                                    <InputText class="form-control" @bind-Value="Customer.Email" />
+                                    <InputText placeholder="example@gmail.com" class="form-control" @bind-Value="Customer.Email" />
                                 </td>
                             </tr>
                             <tr>
@@ -129,9 +129,6 @@
                             </tr>
                         }
                     </tbody>
-
-
-
                 </table>
 
                 <div>

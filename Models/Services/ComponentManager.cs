@@ -15,24 +15,6 @@ namespace ComputerComponentShop.Models.Services
         public ComponentManager(ComputerComponentRepository componentRepository) 
         {
             _componentRepository = componentRepository;
-            
-            //_componentCategory = new Dictionary<ProductCategory, IListManager<Product>>();
-
-            //List<ComponentModel> sComponentCategories = InitProducts.InitComponents();
-
-            //foreach (var aCategory in sComponentCategories)
-            //{
-            //    ListManager<Product> aListManager = new ListManager<Product>();
-            //    foreach (var sComponent in  aCategory.Components.ToList())
-            //    {
-            //        aListManager.Add(sComponent);
-            //    }
-
-            //    _componentCategory[aCategory.ComponentCategory] = aListManager;
-
-            //}
-
-            
         }
 
        
@@ -115,11 +97,18 @@ namespace ComputerComponentShop.Models.Services
 
         }
 
+        private List<Product> _products = new List<Product>();
+
+
         public async Task<List<Product>> SearchSorter(string sSearchString)
         {
-            var sAllProducts = await _componentRepository.GetAllProducts();
+            if(_products.Count == 0)
+            {
+                _products = await _componentRepository.GetAllProducts();
+            }
+            
 
-            return sAllProducts.Where(
+            return _products.Where(
                 x => x.Name.Contains(sSearchString, StringComparison.OrdinalIgnoreCase) ||
                 x.Manufacturer.Contains(sSearchString, StringComparison.OrdinalIgnoreCase) ||
                 x.ProductCategory.ToString().Replace("_", " ").Contains(sSearchString, StringComparison.OrdinalIgnoreCase)

@@ -71,16 +71,5 @@ namespace ComputerComponentShop.Models.DataBase
 
             return products;
         }
-
-        //public async Task<List<Product>> SearchForProducts(string aSearchString)
-        //{
-        //    return await _context.Products
-        //        .Where(p =>
-        //        EF.Functions.Like(p.Name, $"%{aSearchString}") ||
-        //        EF.Functions.Like(p.Manufacturer, $"%{aSearchString}") ||
-        //        EF.Functions.Like(p.ProductCategory.ToString().Replace("_"," "), $"%{aSearchString}"))
-        //        .ToListAsync();
-
-        //}
     }
 }
