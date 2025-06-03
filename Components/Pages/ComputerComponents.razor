@@ -123,7 +123,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        sProducts = ComponentManager.GetAllProductsFlat();
+        sProducts = await ComponentManager.GetAllProductsFlat();
     }
 
 

@@ -3,6 +3,7 @@ using ComputerComponentShop.Models.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComputerComponentShop.Migrations
 {
     [DbContext(typeof(ComputerComponentContext))]
-    partial class ComputerComponentContextModelSnapshot : ModelSnapshot
+    [Migration("20250603182146_AllComponents")]
+    partial class AllComponents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,6 +23,67 @@ namespace ComputerComponentShop.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ComputerComponentShop.Models.BaseClasses.HardDrive", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CapacityGb")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
+
+                    b.Property<int>("ExpectedLifetime")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Interface")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Manufacturer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ModelNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProductCategory")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReadSpeed")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WriteSpeed")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HDDs");
+
+                    b.HasDiscriminator().HasValue("HardDrive");
+
+                    b.UseTphMappingStrategy();
+                });
 
             modelBuilder.Entity("ComputerComponentShop.Models.ProductClasses.AirCooler", b =>
                 {
@@ -440,160 +504,6 @@ namespace ComputerComponentShop.Migrations
                             Price = 2290m,
                             ProductCategory = 4,
                             VramMemory = 6
-                        });
-                });
-
-            modelBuilder.Entity("ComputerComponentShop.Models.ProductClasses.Hdd", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CapacityGb")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ExpectedLifetime")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Interface")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Manufacturer")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ModelNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ProductCategory")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReadSpeed")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Rpm")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("WriteSpeed")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("HDDs");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 501,
-                            CapacityGb = "2000",
-                            Description = "Reliable desktop hard drive with large storage capacity",
-                            ExpectedLifetime = 1000000,
-                            Interface = "SATA",
-                            Manufacturer = "Seagate",
-                            ModelNumber = "ST2000DM008",
-                            Name = "Seagate Barracuda",
-                            Price = 749m,
-                            ProductCategory = 10,
-                            ReadSpeed = 160,
-                            Rpm = "7200",
-                            WriteSpeed = 150
-                        },
-                        new
-                        {
-                            Id = 502,
-                            CapacityGb = "1000",
-                            Description = "Standard desktop HDD ideal for everyday computing",
-                            ExpectedLifetime = 800000,
-                            Interface = "SATA",
-                            Manufacturer = "Western Digital",
-                            ModelNumber = "WD10EZEX",
-                            Name = "WD Blue",
-                            Price = 699m,
-                            ProductCategory = 10,
-                            ReadSpeed = 150,
-                            Rpm = "7200",
-                            WriteSpeed = 140
-                        },
-                        new
-                        {
-                            Id = 503,
-                            CapacityGb = "2000",
-                            Description = "Performance HDD for desktop systems",
-                            ExpectedLifetime = 1000000,
-                            Interface = "SATA",
-                            Manufacturer = "Toshiba",
-                            ModelNumber = "HDWD120UZSVA",
-                            Name = "Toshiba P300",
-                            Price = 829m,
-                            ProductCategory = 10,
-                            ReadSpeed = 160,
-                            Rpm = "7200",
-                            WriteSpeed = 150
-                        },
-                        new
-                        {
-                            Id = 504,
-                            CapacityGb = "4000",
-                            Description = "NAS-optimized HDD with high durability",
-                            ExpectedLifetime = 1800000,
-                            Interface = "SATA",
-                            Manufacturer = "Seagate",
-                            ModelNumber = "ST4000VN008",
-                            Name = "Seagate IronWolf",
-                            Price = 1299m,
-                            ProductCategory = 10,
-                            ReadSpeed = 180,
-                            Rpm = "5900",
-                            WriteSpeed = 170
-                        },
-                        new
-                        {
-                            Id = 505,
-                            CapacityGb = "2000",
-                            Description = "High-performance HDD for gaming and media workstations",
-                            ExpectedLifetime = 1200000,
-                            Interface = "SATA",
-                            Manufacturer = "Western Digital",
-                            ModelNumber = "WD2003FZEX",
-                            Name = "WD Black Performance",
-                            Price = 999m,
-                            ProductCategory = 10,
-                            ReadSpeed = 180,
-                            Rpm = "7200",
-                            WriteSpeed = 160
-                        },
-                        new
-                        {
-                            Id = 506,
-                            CapacityGb = "10000",
-                            Description = "Enterprise-grade hard disk drive for long-term storage",
-                            ExpectedLifetime = 2500000,
-                            Interface = "SATA",
-                            Manufacturer = "HGST",
-                            ModelNumber = "HUH721010ALE600",
-                            Name = "HGST Ultrastar",
-                            Price = 1399m,
-                            ProductCategory = 10,
-                            ReadSpeed = 210,
-                            Rpm = "7200",
-                            WriteSpeed = 200
                         });
                 });
 
@@ -1187,160 +1097,6 @@ namespace ComputerComponentShop.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ComputerComponentShop.Models.ProductClasses.SolidStateDrive", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CapacityGb")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ExpectedLifetime")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FormFactor")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Interface")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Manufacturer")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ModelNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ProductCategory")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReadSpeed")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WriteSpeed")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SSDs");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 401,
-                            CapacityGb = "1000",
-                            Description = "NVMe M.2 SSD with high-performance Gen4 speed",
-                            ExpectedLifetime = 1500000,
-                            FormFactor = "M.2",
-                            Interface = "NVMe",
-                            Manufacturer = "Samsung",
-                            ModelNumber = "MZ-V8P1T0BW",
-                            Name = "Samsung 980 PRO",
-                            Price = 1599m,
-                            ProductCategory = 6,
-                            ReadSpeed = 7000,
-                            WriteSpeed = 5000
-                        },
-                        new
-                        {
-                            Id = 402,
-                            CapacityGb = "1000",
-                            Description = "Reliable 2.5'' SATA SSD with integrated power loss immunity",
-                            ExpectedLifetime = 1800000,
-                            FormFactor = "2.5",
-                            Interface = "SATA",
-                            Manufacturer = "Crucial",
-                            ModelNumber = "CT1000MX500SSD1",
-                            Name = "Crucial MX500",
-                            Price = 899m,
-                            ProductCategory = 6,
-                            ReadSpeed = 560,
-                            WriteSpeed = 510
-                        },
-                        new
-                        {
-                            Id = 403,
-                            CapacityGb = "1000",
-                            Description = "High-end PCIe Gen4 NVMe SSD for gaming",
-                            ExpectedLifetime = 1600000,
-                            FormFactor = "M.2",
-                            Interface = "NVMe",
-                            Manufacturer = "Western Digital",
-                            ModelNumber = "WDS100T2X0E",
-                            Name = "WD Black SN850X",
-                            Price = 1399m,
-                            ProductCategory = 6,
-                            ReadSpeed = 7300,
-                            WriteSpeed = 6300
-                        },
-                        new
-                        {
-                            Id = 404,
-                            CapacityGb = "480",
-                            Description = "Budget-friendly SATA SSD",
-                            ExpectedLifetime = 1000000,
-                            FormFactor = "2.5",
-                            Interface = "SATA",
-                            Manufacturer = "Kingston",
-                            ModelNumber = "SA400S37/480G",
-                            Name = "Kingston A400",
-                            Price = 499m,
-                            ProductCategory = 6,
-                            ReadSpeed = 500,
-                            WriteSpeed = 450
-                        },
-                        new
-                        {
-                            Id = 405,
-                            CapacityGb = "1000",
-                            Description = "QLC NVMe SSD for everyday computing",
-                            ExpectedLifetime = 1000000,
-                            FormFactor = "M.2",
-                            Interface = "NVMe",
-                            Manufacturer = "Intel",
-                            ModelNumber = "SSDPEKNU010TZX1",
-                            Name = "Intel 670p",
-                            Price = 849m,
-                            ProductCategory = 6,
-                            ReadSpeed = 3500,
-                            WriteSpeed = 2700
-                        },
-                        new
-                        {
-                            Id = 406,
-                            CapacityGb = "1000",
-                            Description = "M.2 NVMe SSD with PCIe Gen4 support",
-                            ExpectedLifetime = 1400000,
-                            FormFactor = "M.2",
-                            Interface = "NVMe",
-                            Manufacturer = "Sabrent",
-                            ModelNumber = "SB-RKTQ4-1TB",
-                            Name = "Sabrent Rocket Q4",
-                            Price = 1299m,
-                            ProductCategory = 6,
-                            ReadSpeed = 4700,
-                            WriteSpeed = 1800
-                        });
-                });
-
             modelBuilder.Entity("ComputerComponentShop.Models.ProductClasses.WaterCooler", b =>
                 {
                     b.Property<int>("Id")
@@ -1499,6 +1255,224 @@ namespace ComputerComponentShop.Migrations
                             PumpSpeed = 2700,
                             RadiatorSize = 240,
                             SocketCompatibility = "AM4, LGA1200, LGA1700"
+                        });
+                });
+
+            modelBuilder.Entity("ComputerComponentShop.Models.ProductClasses.Hdd", b =>
+                {
+                    b.HasBaseType("ComputerComponentShop.Models.BaseClasses.HardDrive");
+
+                    b.Property<string>("Rpm")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Hdd");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 501,
+                            CapacityGb = "2000",
+                            Description = "Reliable desktop hard drive with large storage capacity",
+                            ExpectedLifetime = 1000000,
+                            Interface = "SATA",
+                            Manufacturer = "Seagate",
+                            ModelNumber = "ST2000DM008",
+                            Name = "Seagate Barracuda",
+                            Price = 749m,
+                            ProductCategory = 10,
+                            ReadSpeed = 160,
+                            WriteSpeed = 150,
+                            Rpm = "7200"
+                        },
+                        new
+                        {
+                            Id = 502,
+                            CapacityGb = "1000",
+                            Description = "Standard desktop HDD ideal for everyday computing",
+                            ExpectedLifetime = 800000,
+                            Interface = "SATA",
+                            Manufacturer = "Western Digital",
+                            ModelNumber = "WD10EZEX",
+                            Name = "WD Blue",
+                            Price = 699m,
+                            ProductCategory = 10,
+                            ReadSpeed = 150,
+                            WriteSpeed = 140,
+                            Rpm = "7200"
+                        },
+                        new
+                        {
+                            Id = 503,
+                            CapacityGb = "2000",
+                            Description = "Performance HDD for desktop systems",
+                            ExpectedLifetime = 1000000,
+                            Interface = "SATA",
+                            Manufacturer = "Toshiba",
+                            ModelNumber = "HDWD120UZSVA",
+                            Name = "Toshiba P300",
+                            Price = 829m,
+                            ProductCategory = 10,
+                            ReadSpeed = 160,
+                            WriteSpeed = 150,
+                            Rpm = "7200"
+                        },
+                        new
+                        {
+                            Id = 504,
+                            CapacityGb = "4000",
+                            Description = "NAS-optimized HDD with high durability",
+                            ExpectedLifetime = 1800000,
+                            Interface = "SATA",
+                            Manufacturer = "Seagate",
+                            ModelNumber = "ST4000VN008",
+                            Name = "Seagate IronWolf",
+                            Price = 1299m,
+                            ProductCategory = 10,
+                            ReadSpeed = 180,
+                            WriteSpeed = 170,
+                            Rpm = "5900"
+                        },
+                        new
+                        {
+                            Id = 505,
+                            CapacityGb = "2000",
+                            Description = "High-performance HDD for gaming and media workstations",
+                            ExpectedLifetime = 1200000,
+                            Interface = "SATA",
+                            Manufacturer = "Western Digital",
+                            ModelNumber = "WD2003FZEX",
+                            Name = "WD Black Performance",
+                            Price = 999m,
+                            ProductCategory = 10,
+                            ReadSpeed = 180,
+                            WriteSpeed = 160,
+                            Rpm = "7200"
+                        },
+                        new
+                        {
+                            Id = 506,
+                            CapacityGb = "10000",
+                            Description = "Enterprise-grade hard disk drive for long-term storage",
+                            ExpectedLifetime = 2500000,
+                            Interface = "SATA",
+                            Manufacturer = "HGST",
+                            ModelNumber = "HUH721010ALE600",
+                            Name = "HGST Ultrastar",
+                            Price = 1399m,
+                            ProductCategory = 10,
+                            ReadSpeed = 210,
+                            WriteSpeed = 200,
+                            Rpm = "7200"
+                        });
+                });
+
+            modelBuilder.Entity("ComputerComponentShop.Models.ProductClasses.SolidStateDrive", b =>
+                {
+                    b.HasBaseType("ComputerComponentShop.Models.BaseClasses.HardDrive");
+
+                    b.Property<string>("FormFactor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("SolidStateDrive");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 401,
+                            CapacityGb = "1000",
+                            Description = "NVMe M.2 SSD with high-performance Gen4 speed",
+                            ExpectedLifetime = 1500000,
+                            Interface = "NVMe",
+                            Manufacturer = "Samsung",
+                            ModelNumber = "MZ-V8P1T0BW",
+                            Name = "Samsung 980 PRO",
+                            Price = 1599m,
+                            ProductCategory = 6,
+                            ReadSpeed = 7000,
+                            WriteSpeed = 5000,
+                            FormFactor = "M.2"
+                        },
+                        new
+                        {
+                            Id = 402,
+                            CapacityGb = "1000",
+                            Description = "Reliable 2.5'' SATA SSD with integrated power loss immunity",
+                            ExpectedLifetime = 1800000,
+                            Interface = "SATA",
+                            Manufacturer = "Crucial",
+                            ModelNumber = "CT1000MX500SSD1",
+                            Name = "Crucial MX500",
+                            Price = 899m,
+                            ProductCategory = 6,
+                            ReadSpeed = 560,
+                            WriteSpeed = 510,
+                            FormFactor = "2.5"
+                        },
+                        new
+                        {
+                            Id = 403,
+                            CapacityGb = "1000",
+                            Description = "High-end PCIe Gen4 NVMe SSD for gaming",
+                            ExpectedLifetime = 1600000,
+                            Interface = "NVMe",
+                            Manufacturer = "Western Digital",
+                            ModelNumber = "WDS100T2X0E",
+                            Name = "WD Black SN850X",
+                            Price = 1399m,
+                            ProductCategory = 6,
+                            ReadSpeed = 7300,
+                            WriteSpeed = 6300,
+                            FormFactor = "M.2"
+                        },
+                        new
+                        {
+                            Id = 404,
+                            CapacityGb = "480",
+                            Description = "Budget-friendly SATA SSD",
+                            ExpectedLifetime = 1000000,
+                            Interface = "SATA",
+                            Manufacturer = "Kingston",
+                            ModelNumber = "SA400S37/480G",
+                            Name = "Kingston A400",
+                            Price = 499m,
+                            ProductCategory = 6,
+                            ReadSpeed = 500,
+                            WriteSpeed = 450,
+                            FormFactor = "2.5"
+                        },
+                        new
+                        {
+                            Id = 405,
+                            CapacityGb = "1000",
+                            Description = "QLC NVMe SSD for everyday computing",
+                            ExpectedLifetime = 1000000,
+                            Interface = "NVMe",
+                            Manufacturer = "Intel",
+                            ModelNumber = "SSDPEKNU010TZX1",
+                            Name = "Intel 670p",
+                            Price = 849m,
+                            ProductCategory = 6,
+                            ReadSpeed = 3500,
+                            WriteSpeed = 2700,
+                            FormFactor = "M.2"
+                        },
+                        new
+                        {
+                            Id = 406,
+                            CapacityGb = "1000",
+                            Description = "M.2 NVMe SSD with PCIe Gen4 support",
+                            ExpectedLifetime = 1400000,
+                            Interface = "NVMe",
+                            Manufacturer = "Sabrent",
+                            ModelNumber = "SB-RKTQ4-1TB",
+                            Name = "Sabrent Rocket Q4",
+                            Price = 1299m,
+                            ProductCategory = 6,
+                            ReadSpeed = 4700,
+                            WriteSpeed = 1800,
+                            FormFactor = "M.2"
                         });
                 });
 #pragma warning restore 612, 618

@@ -1,11 +1,12 @@
 ﻿@inject ComponentManager ComponentManager
 @inject ShoppingCartManager ShoppingCartManager
+@inject ComputerComponentRepository ComponentRepository
 @page "/powersupplies"
 <PageTitle>Power Supplies</PageTitle>
 
 <div class="container">
     <div class="row">
-        @foreach (var product in ComponentManager.GetComponentsBasedOnCategories(ProductCategory.Power_Supply))
+        @foreach (var product in aPowerSupplyList)
         {
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm">
@@ -69,6 +70,7 @@
     bool IsFormVisible = false;
     private Product? sSelectedProduct;
     private string DisplayValue = string.Empty;
+    private List<PowerSupply> aPowerSupplyList = new();
 
     private void DisplayMoreInfo(Product aProduct)
     {
@@ -80,6 +82,11 @@
     {
         IsFormVisible = false;
         sSelectedProduct = null;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        aPowerSupplyList = await ComponentRepository.GetPowerSupplies();
     }
 
     

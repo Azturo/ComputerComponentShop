@@ -1,5 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using ComputerComponentShop.Models.BaseClasses;
+using ComputerComponentShop.Models.DataBase;
 using ComputerComponentShop.Models.ProductEnums;
 
 namespace ComputerComponentShop.Models.Services
@@ -8,48 +10,40 @@ namespace ComputerComponentShop.Models.Services
     {
         private Dictionary<ProductCategory, IListManager<Product>> _componentCategory;
 
-        public ComponentManager() 
+        private readonly ComputerComponentRepository _componentRepository;
+
+        public ComponentManager(ComputerComponentRepository componentRepository) 
         {
-            _componentCategory = new Dictionary<ProductCategory, IListManager<Product>>();
+            _componentRepository = componentRepository;
+            
+            //_componentCategory = new Dictionary<ProductCategory, IListManager<Product>>();
 
-            List<ComponentModel> sComponentCategories = InitProducts.InitComponents();
+            //List<ComponentModel> sComponentCategories = InitProducts.InitComponents();
 
-            foreach (var aCategory in sComponentCategories)
-            {
-                ListManager<Product> aListManager = new ListManager<Product>();
-                foreach (var sComponent in  aCategory.Components.ToList())
-                {
-                    aListManager.Add(sComponent);
-                }
+            //foreach (var aCategory in sComponentCategories)
+            //{
+            //    ListManager<Product> aListManager = new ListManager<Product>();
+            //    foreach (var sComponent in  aCategory.Components.ToList())
+            //    {
+            //        aListManager.Add(sComponent);
+            //    }
 
-                _componentCategory[aCategory.ComponentCategory] = aListManager;
+            //    _componentCategory[aCategory.ComponentCategory] = aListManager;
 
-            }
+            //}
 
             
         }
 
-        public Dictionary<ProductCategory, IListManager<Product>> GetAllComponents()
+       
+
+        public async Task<List<Product>> GetAllProductsFlat()
         {
-            return _componentCategory;
+            return await _componentRepository.GetAllProducts();
+
         }
 
-        public List<Product> GetAllProductsFlat()
-        {
-            return _componentCategory.Values
-                .SelectMany(manager => manager.ToList())
-                .ToList();
-        }
-
-        public List<Product> GetComponentsBasedOnCategories(ProductCategory aProductCategory)
-        {
-            if(_componentCategory.TryGetValue(aProductCategory, out var sComponentManager))
-            {
-                return sComponentManager.ToList();
-            }
-
-            return new List<Product>();
-        }
+        
 
         public string PrettyPrintComponentProperties(string aInput)
         {
@@ -121,18 +115,22 @@ namespace ComputerComponentShop.Models.Services
 
         }
 
-        public List<Product> SearchSorter(string sSearchString)
+        public async Task<List<Product>> SearchSorter(string sSearchString)
         {
-            List<Product> aSortedProductList = GetAllProductsFlat()
-                    .Where(sProducts =>
-                    sProducts.Name.Contains(sSearchString, StringComparison.OrdinalIgnoreCase) ||
-                    sProducts.Manufacturer.Contains(sSearchString, StringComparison.OrdinalIgnoreCase) ||
-                    sProducts.ProductCategory.ToString().Contains(sSearchString, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+            var sAllProducts = await _componentRepository.GetAllProducts();
 
-            return aSortedProductList;
+            return sAllProducts.Where(
+                x => x.Name.Contains(sSearchString, StringComparison.OrdinalIgnoreCase) ||
+                x.Manufacturer.Contains(sSearchString, StringComparison.OrdinalIgnoreCase) ||
+                x.ProductCategory.ToString().Replace("_", " ").Contains(sSearchString, StringComparison.OrdinalIgnoreCase)
+                
+
+                ).ToList();
+
+            
+
         }
 
-        
+
     }
 }

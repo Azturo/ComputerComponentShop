@@ -19,10 +19,16 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<CustomerManager>();
 builder.Services.AddSingleton<AlertService>();
 builder.Services.AddScoped<ShoppingCartManager>();
-builder.Services.AddSingleton<ComponentManager>();
+builder.Services.AddScoped<ComponentManager>();
 builder.Services.AddScoped<ComputerComponentRepository>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ComputerComponentContext>();
+    db.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

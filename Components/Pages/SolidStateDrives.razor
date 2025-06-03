@@ -1,11 +1,12 @@
 ﻿@inject ComponentManager ComponentManager
 @inject ShoppingCartManager ShoppingCartManager
+@inject ComputerComponentRepository ComponentRepository
 @page "/solidstatedrives"
 <PageTitle>Solid State Drives</PageTitle>
 
 <div class="container">
     <div class="row">
-        @foreach (var product in ComponentManager.GetComponentsBasedOnCategories(ProductCategory.Solid_State_Drive))
+        @foreach (var product in aSsdList)
         {
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm">
@@ -47,9 +48,9 @@
                                 string aPropertyName = _property.Name;
                                 string aPropertySuffix = ComponentManager.ShowCorrectSuffixOnProperty(aPropertyName);
 
-                             
+
                                 <tr>
-                                    
+
                                     <th class=" p-1">@ComponentManager.PrettyPrintComponentProperties(_property.Name):</th>
                                     <td class="vw-50 p-1">@ComponentManager.Remove_(aValue.ToString()) @($"{aPropertySuffix}")</td>
                                 </tr>
@@ -70,6 +71,7 @@
     bool IsFormVisible = false;
     private Product? sSelectedProduct;
     private string DisplayValue = string.Empty;
+    private List<SolidStateDrive> aSsdList = new();
 
     private void DisplayMoreInfo(Product aProduct)
     {
@@ -81,6 +83,11 @@
     {
         IsFormVisible = false;
         sSelectedProduct = null;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        aSsdList = await ComponentRepository.GetSolidStateDrives();
     }
 
 }
