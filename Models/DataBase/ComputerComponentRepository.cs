@@ -7,6 +7,7 @@ namespace ComputerComponentShop.Models.DataBase
     public class ComputerComponentRepository
     {
         private readonly ComputerComponentContext _context;
+        private readonly List<Product> sProducts = new List<Product>();
 
         public ComputerComponentRepository(ComputerComponentContext context)
         {
@@ -56,20 +57,19 @@ namespace ComputerComponentShop.Models.DataBase
 
         public async Task<List<Product>> GetAllProducts()
         {
-            List<Product> products = new List<Product>();
 
-            products.AddRange(await _context.Processors.ToListAsync());
-            products.AddRange(await _context.GPUs.ToListAsync());
-            products.AddRange(await _context.Rams.ToListAsync());
-            products.AddRange(await _context.PowerSupplies.ToListAsync());
-            products.AddRange(await _context.Motherboards.ToListAsync());
-            products.AddRange(await _context.AirCoolers.ToListAsync());
-            products.AddRange(await _context.WaterCoolers.ToListAsync());
-            products.AddRange(await _context.HDDs.ToListAsync());
-            products.AddRange(await _context.SSDs.ToListAsync());
-            products.AddRange(await _context.Chassis.ToListAsync());
+            sProducts.AddRange(await _context.Processors.ToListAsync());
+            sProducts.AddRange(await _context.GPUs.ToListAsync());
+            sProducts.AddRange(await _context.Rams.ToListAsync());
+            sProducts.AddRange(await _context.PowerSupplies.ToListAsync());
+            sProducts.AddRange(await _context.Motherboards.ToListAsync());
+            sProducts.AddRange(await _context.AirCoolers.ToListAsync());
+            sProducts.AddRange(await _context.WaterCoolers.ToListAsync());
+            sProducts.AddRange(await _context.HDDs.ToListAsync());
+            sProducts.AddRange(await _context.SSDs.ToListAsync());
+            sProducts.AddRange(await _context.Chassis.ToListAsync());
 
-            return products;
+            return sProducts;
         }
     }
 }

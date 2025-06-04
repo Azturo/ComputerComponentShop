@@ -8,7 +8,6 @@ namespace ComputerComponentShop.Models.DataBase
 {
     public class ComputerComponentContext : DbContext
     {
-        //public DbSet<Product> Products { get; set; }
         public DbSet<Processor> Processors { get; set; }
 
         public DbSet<Motherboard> Motherboards { get; set; }
@@ -27,7 +26,10 @@ namespace ComputerComponentShop.Models.DataBase
         
         }
 
-
+        /// <summary>
+        /// Creates all my computer components in the database
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             #region Add Processors
@@ -255,7 +257,7 @@ namespace ComputerComponentShop.Models.DataBase
                 });
             #endregion
 
-            #region Graphiccards
+            #region Graphic cards
 
 
             modelBuilder.Entity<GraphicCard>().HasData(

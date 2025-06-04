@@ -1,16 +1,13 @@
-﻿using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using ComputerComponentShop.Models.BaseClasses;
+﻿using ComputerComponentShop.Models.BaseClasses;
 using ComputerComponentShop.Models.DataBase;
-using ComputerComponentShop.Models.ProductEnums;
+
 
 namespace ComputerComponentShop.Models.Services
 {
     public class ComponentManager
     {
-        private Dictionary<ProductCategory, IListManager<Product>> _componentCategory;
-
         private readonly ComputerComponentRepository _componentRepository;
+        private List<Product> _products = new List<Product>();
 
         public ComponentManager(ComputerComponentRepository componentRepository) 
         {
@@ -18,21 +15,37 @@ namespace ComputerComponentShop.Models.Services
         }
 
        
-
+        /// <summary>
+        /// Gets all products from the repository
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<Product>> GetAllProductsFlat()
         {
-            return await _componentRepository.GetAllProducts();
+            if (_products.Count == 0)
+            {
+                _products = await _componentRepository.GetAllProducts();
+            }
+
+            return _products.ToList();
 
         }
 
         
-
+        /// <summary>
+        /// Returns the parameter string and makes the string prettier
+        /// </summary>
+        /// <param name="aInput"></param>
+        /// <returns></returns>
         public string PrettyPrintComponentProperties(string aInput)
         {
-
             return System.Text.RegularExpressions.Regex.Replace(aInput, "(\\B[A-Z])", " $1");
         }
 
+        /// <summary>
+        /// Replaces "_"  from a enumstring with blankspace
+        /// </summary>
+        /// <param name="aEnumValue"></param>
+        /// <returns></returns>
         public static string Remove_(string aEnumValue)
         {
             if (aEnumValue.Contains("_"))
@@ -97,9 +110,11 @@ namespace ComputerComponentShop.Models.Services
 
         }
 
-        private List<Product> _products = new List<Product>();
-
-
+        /// <summary>
+        /// Populates a product list with all products. Then filters the list with the users search string in the GUI
+        /// </summary>
+        /// <param name="sSearchString"></param>
+        /// <returns>All Products in the list that matches the search string</returns>
         public async Task<List<Product>> SearchSorter(string sSearchString)
         {
             if(_products.Count == 0)

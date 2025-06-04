@@ -30,6 +30,7 @@
     </div>
 </div>
 
+@* Using reflections to get all the AirCooler properties for display in the modal*@
 @if (IsFormVisible && sSelectedProduct is AirCooler aAirCooler)
 {
     <div class="modal fade show d-block" tabindex="-1">
@@ -83,6 +84,10 @@
         IsFormVisible = false;
         sSelectedProduct = null;
     }
+    /// <summary>
+    /// Fetches the air cooler products from the database repository when the component is initialized
+    /// </summary>
+    /// <returns></returns>
     protected override async Task OnInitializedAsync()
     {
         aAirCoolerList = await ComponentRepository.GetAirCoolers();

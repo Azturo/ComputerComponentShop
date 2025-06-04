@@ -31,7 +31,7 @@
 </div>
 
 
-
+@* Using reflections to get all the Chassis properties for display in the modal*@
 @if (IsFormVisible && sSelectedProduct is Chassi aChassi)
 {
     <div class="modal fade show d-block" tabindex="-1">
@@ -73,7 +73,10 @@
     private Product? sSelectedProduct;
     private List<Chassi> aChassiList = new();
 
-
+    /// <summary>
+    /// Method for displaying more info. Sets a bool value to true and a selected product
+    /// </summary>
+    /// <param name="aProduct"></param>
     private void DisplayMoreInfo(Product aProduct)
     {
         IsFormVisible = true;
