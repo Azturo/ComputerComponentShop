@@ -1,11 +1,12 @@
 ﻿@inject ComponentManager ComponentManager
 @inject ShoppingCartManager ShoppingCartManager
+@inject ComputerComponentRepository ComponentRepository
 @page "/motherboards"
 <PageTitle>Motherboards</PageTitle>
 
 <div class="container">
     <div class="row">
-        @foreach (var product in sMotherboardList)
+        @foreach (var product in aMotherBoardList)
         {
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm">
@@ -69,11 +70,7 @@
     bool IsFormVisible = false;
     private Product? sSelectedProduct;
     private string DisplayValue = string.Empty;
-
-    protected override void OnInitialized()
-    {
-        sMotherboardList = ComponentManager.GetComponentsBasedOnCategories(ProductCategory.Motherboard);
-    }
+    private List<Motherboard> aMotherBoardList = new();
 
     private void DisplayMoreInfo(Product aProduct)
     {
@@ -85,6 +82,11 @@
     {
         IsFormVisible = false;
         sSelectedProduct = null;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        aMotherBoardList = await ComponentRepository.GetMotherBoards();
     }
 
 }

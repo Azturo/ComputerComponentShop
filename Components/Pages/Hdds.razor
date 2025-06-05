@@ -1,11 +1,12 @@
 ﻿@inject ComponentManager ComponentManager
 @inject ShoppingCartManager ShoppingCartManager
+@inject ComputerComponentRepository ComponentRepository
 @page "/hdds"
 <PageTitle>HDD</PageTitle>
 
 <div class="container">
     <div class="row">
-        @foreach (var product in ComponentManager.GetComponentsBasedOnCategories(ProductCategory.HDD))
+        @foreach (var product in aHarddriveList)
         {
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm">
@@ -67,6 +68,7 @@
     bool IsFormVisible = false;
     private Product? sSelectedProduct;
     private string DisplayValue = string.Empty;
+    private List<Hdd> aHarddriveList = new();
 
     private void DisplayMoreInfo(Product aProduct)
     {
@@ -78,6 +80,11 @@
     {
         IsFormVisible = false;
         sSelectedProduct = null;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        aHarddriveList = await ComponentRepository.GetHardDrives();
     }
 
     

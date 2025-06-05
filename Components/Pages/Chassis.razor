@@ -1,11 +1,12 @@
 ﻿@inject ComponentManager ComponentManager
 @inject ShoppingCartManager ShoppingCartManager
+@inject ComputerComponentRepository ComponentRepository
 @page "/chassis"
 <PageTitle>Chassis</PageTitle>
 
 <div class="container">
     <div class="row">
-        @foreach (var product in ComponentManager.GetComponentsBasedOnCategories(ProductCategory.Case))
+        @foreach (var product in aChassiList)
         {
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm">
@@ -30,7 +31,7 @@
 </div>
 
 
-
+@* Using reflections to get all the Chassis properties for display in the modal*@
 @if (IsFormVisible && sSelectedProduct is Chassi aChassi)
 {
     <div class="modal fade show d-block" tabindex="-1">
@@ -70,8 +71,12 @@
 @code {
     bool IsFormVisible = false;
     private Product? sSelectedProduct;
+    private List<Chassi> aChassiList = new();
 
-
+    /// <summary>
+    /// Method for displaying more info. Sets a bool value to true and a selected product
+    /// </summary>
+    /// <param name="aProduct"></param>
     private void DisplayMoreInfo(Product aProduct)
     {
         IsFormVisible = true;
@@ -82,6 +87,11 @@
     {
         IsFormVisible = false;
         sSelectedProduct = null;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        aChassiList = await ComponentRepository.GetChassis();
     }
 
 }

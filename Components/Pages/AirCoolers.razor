@@ -1,11 +1,12 @@
 ﻿@inject ComponentManager ComponentManager
 @inject ShoppingCartManager ShoppingCartManager
+@inject ComputerComponentRepository ComponentRepository
 @page "/aircoolers"
 <PageTitle>Air Coolers</PageTitle>
 
 <div class="container">
     <div class="row">
-        @foreach (var product in ComponentManager.GetComponentsBasedOnCategories(ProductCategory.Air_Cooler))
+        @foreach (var product in aAirCoolerList)
         {
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm">
@@ -29,6 +30,7 @@
     </div>
 </div>
 
+@* Using reflections to get all the AirCooler properties for display in the modal*@
 @if (IsFormVisible && sSelectedProduct is AirCooler aAirCooler)
 {
     <div class="modal fade show d-block" tabindex="-1">
@@ -69,6 +71,7 @@
     bool IsFormVisible = false;
     private Product? sSelectedProduct;
     private string DisplayValue = string.Empty;
+    private List<AirCooler> aAirCoolerList = new();
 
     private void DisplayMoreInfo(Product aProduct)
     {
@@ -81,6 +84,15 @@
         IsFormVisible = false;
         sSelectedProduct = null;
     }
+    /// <summary>
+    /// Fetches the air cooler products from the database repository when the component is initialized
+    /// </summary>
+    /// <returns></returns>
+    protected override async Task OnInitializedAsync()
+    {
+        aAirCoolerList = await ComponentRepository.GetAirCoolers();
+    }
+
 
    
 

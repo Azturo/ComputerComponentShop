@@ -14,7 +14,7 @@ namespace ComputerComponentShop.Models.BaseClasses
         [Required(ErrorMessage = "Last name is required")]
         public string LastName { get; set; }
 
-        [Required]
+        [ValidateComplexType]
         public Address Address { get; set; }
 
         [Required(ErrorMessage = "Email is invalid")]

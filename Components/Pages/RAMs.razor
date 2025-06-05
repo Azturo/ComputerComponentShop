@@ -1,11 +1,12 @@
 ﻿@inject ComponentManager ComponentManager
 @inject ShoppingCartManager ShoppingCartManager
+@inject ComputerComponentRepository ComponentRepository
 @page "/rams"
 <PageTitle>RAM</PageTitle>
 
 <div class="container">
     <div class="row">
-        @foreach (var product in ComponentManager.GetComponentsBasedOnCategories(ProductCategory.RAM))
+        @foreach (var product in aRamList)
         {
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm">
@@ -67,6 +68,7 @@
     bool IsFormVisible = false;
     private Product? sSelectedProduct;
     private string DisplayValue = string.Empty;
+    private List<Ram> aRamList = new();
 
     private void DisplayMoreInfo(Product aProduct)
     {
@@ -79,5 +81,12 @@
         IsFormVisible = false;
         sSelectedProduct = null;
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        aRamList = await ComponentRepository.GetRams();
+    }
+
+
 
 }

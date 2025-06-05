@@ -1,62 +1,51 @@
-﻿using System.Runtime.CompilerServices;
-using ComputerComponentShop.Models.BaseClasses;
-using ComputerComponentShop.Models.ProductEnums;
+﻿using ComputerComponentShop.Models.BaseClasses;
+using ComputerComponentShop.Models.DataBase;
+
 
 namespace ComputerComponentShop.Models.Services
 {
     public class ComponentManager
     {
-        private Dictionary<ProductCategory, IListManager<Product>> _componentCategory;
+        private readonly ComputerComponentRepository _componentRepository;
+        private List<Product> _products = new List<Product>();
 
-        public ComponentManager() 
+        public ComponentManager(ComputerComponentRepository componentRepository) 
         {
-            _componentCategory = new Dictionary<ProductCategory, IListManager<Product>>();
+            _componentRepository = componentRepository;
+        }
 
-            List<ComponentModel> sComponentCategories = InitProducts.InitComponents();
-
-            foreach (var aCategory in sComponentCategories)
+       
+        /// <summary>
+        /// Gets all products from the repository
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<Product>> GetAllProductsFlat()
+        {
+            if (_products.Count == 0)
             {
-                ListManager<Product> aListManager = new ListManager<Product>();
-                foreach (var sComponent in  aCategory.Components.ToList())
-                {
-                    aListManager.Add(sComponent);
-                }
-
-                _componentCategory[aCategory.ComponentCategory] = aListManager;
-
+                _products = await _componentRepository.GetAllProducts();
             }
 
-            
+            return _products.ToList();
+
         }
 
-        public Dictionary<ProductCategory, IListManager<Product>> GetAllComponents()
-        {
-            return _componentCategory;
-        }
-
-        public List<Product> GetAllProductsFlat()
-        {
-            return _componentCategory.Values
-                .SelectMany(manager => manager.ToList())
-                .ToList();
-        }
-
-        public List<Product> GetComponentsBasedOnCategories(ProductCategory aProductCategory)
-        {
-            if(_componentCategory.TryGetValue(aProductCategory, out var sComponentManager))
-            {
-                return sComponentManager.ToList();
-            }
-
-            return new List<Product>();
-        }
-
+        
+        /// <summary>
+        /// Returns the parameter string and makes the string prettier
+        /// </summary>
+        /// <param name="aInput"></param>
+        /// <returns></returns>
         public string PrettyPrintComponentProperties(string aInput)
         {
-
             return System.Text.RegularExpressions.Regex.Replace(aInput, "(\\B[A-Z])", " $1");
         }
 
+        /// <summary>
+        /// Replaces "_"  from a enumstring with blankspace
+        /// </summary>
+        /// <param name="aEnumValue"></param>
+        /// <returns></returns>
         public static string Remove_(string aEnumValue)
         {
             if (aEnumValue.Contains("_"))
@@ -121,18 +110,31 @@ namespace ComputerComponentShop.Models.Services
 
         }
 
-        public List<Product> SearchSorter(string sSearchString)
+        /// <summary>
+        /// Populates a product list with all products. Then filters the list with the users search string in the GUI
+        /// </summary>
+        /// <param name="sSearchString"></param>
+        /// <returns>All Products in the list that matches the search string</returns>
+        public async Task<List<Product>> SearchSorter(string sSearchString)
         {
-            List<Product> aSortedProductList = GetAllProductsFlat()
-                    .Where(sProducts =>
-                    sProducts.Name.Contains(sSearchString, StringComparison.OrdinalIgnoreCase) ||
-                    sProducts.Manufacturer.Contains(sSearchString, StringComparison.OrdinalIgnoreCase) ||
-                    sProducts.ProductCategory.ToString().Contains(sSearchString, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+            if(_products.Count == 0)
+            {
+                _products = await _componentRepository.GetAllProducts();
+            }
+            
 
-            return aSortedProductList;
+            return _products.Where(
+                x => x.Name.Contains(sSearchString, StringComparison.OrdinalIgnoreCase) ||
+                x.Manufacturer.Contains(sSearchString, StringComparison.OrdinalIgnoreCase) ||
+                x.ProductCategory.ToString().Replace("_", " ").Contains(sSearchString, StringComparison.OrdinalIgnoreCase)
+                
+
+                ).ToList();
+
+            
+
         }
 
-        
+
     }
 }
